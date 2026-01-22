@@ -1,0 +1,15 @@
+    body { font-family: Arial, sans-serif; }
+
+    .disabled {
+    pointer-events: none;
+    opacity: 0.25;
+    cursor: not-allowed;
+    }
+
+    .button-columns{
+    display: grid;
+    grid-template-columns: repeat(2, 250px);
+
+    align-items: start;
+    }
+

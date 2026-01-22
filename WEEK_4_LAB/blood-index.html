@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blood Reserves</title>
+</head>
+<body>
+
+  <h1>Blood Reserves</h1>
+
+  <label for="blood-group-abo">ABO Blood Group</label>
+  <select id="blood-group-abo">
+    <option value="A">A</option>
+    <option value="AB">AB</option>
+    <option value="B">B</option>
+    <option value="O">O</option>
+  </select>
+
+  <br>
+
+  <label for="blood-group-rh">Rh Factor</label>
+  <select id="blood-group-rh">
+    <option value="positive">Positive</option>
+    <option value="negative">Negative</option>
+  </select>
+
+  <br>
+  <button id="get-blood-units-button">Get blood units</button>
+
+  <div id="display-blood-units">
+    <p>Blood group: <span id="blood-group-display"></span></p>
+    <p>Units available: <span id="units-available"></span></p>
+
+    <!-- This helps you see exactly what the API returned -->
+    <p>Debug response:</p>
+    <pre id="debug-response" style="border:1px solid #ccc; padding:10px; max-width:600px; white-space:pre-wrap;"></pre>
+  </div>
+
+  <script>
+    const bloodGroupAboInput = document.querySelector('#blood-group-abo');
+    const bloodGroupRhInput  = document.querySelector('#blood-group-rh');
+    const getBloodUnitsButton = document.querySelector('#get-blood-units-button');
+
+    const bloodGroupDisplay = document.querySelector('#blood-group-display');
+    const unitsAvailableDisplay = document.querySelector('#units-available');
+    const debugResponse = document.querySelector('#debug-response');
+
+    const BASE_URL = 'https://blood-group-api.wl.r.appspot.com';
+
+    function makeDisplayBloodType() {
+      const abo = bloodGroupAboInput.value;
+      const rh = bloodGroupRhInput.value;
+      return `${abo}${rh === 'positive' ? '+' : '-'}`; // A+ / O-
+    }
+
+    function makeApiGroupValue() {
+      // API expects strings like Apositive / Onegative
+      const abo = bloodGroupAboInput.value;
+      const rh = bloodGroupRhInput.value; // "positive" or "negative"
+      return `${abo}${rh}`;
+    }
+
+    // Finds the first number anywhere in a nested JSON object/array/string
+    function findFirstNumberDeep(value) {
+      if (value === null || value === undefined) return null;
+
+      if (typeof value === 'number' && Number.isFinite(value)) return value;
+
+      if (typeof value === 'string') {
+        const match = value.match(/-?\d+(\.\d+)?/);
+        if (match) {
+          const n = Number(match[0]);
+          if (Number.isFinite(n)) return n;
+        }
+        return null;
+      }
+
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          const n = findFirstNumberDeep(item);
+          if (n !== null) return n;
+        }
+        return null;
+      }
+
+      if (typeof value === 'object') {
+        for (const v of Object.values(value)) {
+          const n = findFirstNumberDeep(v);
+          if (n !== null) return n;
+        }
+        return null;
+      }
+
+      return null;
+    }
+
+    function extractUnits(data, groupValue) {
+      // If response is keyed by group name, try that first
+      if (data && typeof data === 'object' && !Array.isArray(data) && (groupValue in data)) {
+        const n = findFirstNumberDeep(data[groupValue]);
+        if (n !== null) return n;
+      }
+
+      // Otherwise just find the first number anywhere in the response
+      return findFirstNumberDeep(data);
+    }
+
+    getBloodUnitsButton.addEventListener('click', async () => {
+      const displayType = makeDisplayBloodType();
+      const groupValue = makeApiGroupValue();
+
+      bloodGroupDisplay.textContent = displayType;
+      unitsAvailableDisplay.textContent = 'Loading...';
+      debugResponse.textContent = '';
+      getBloodUnitsButton.disabled = true;
+
+      try {
+        const url = `${BASE_URL}/api/blood_units_by_group?group=${encodeURIComponent(groupValue)}`;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        // Read as text first (some APIs return text), then try JSON parse
+        const rawText = await res.text();
+
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          data = rawText;
+        }
+
+        // Show what the API returned (so you can prove it worked / debug it)
+        debugResponse.textContent =
+          (typeof data === 'string') ? data : JSON.stringify(data, null, 2);
+
+        const units = extractUnits(data, groupValue);
+
+        if (units === null) {
+          unitsAvailableDisplay.textContent = 'Unknown (API response has no number)';
+        } else {
+          unitsAvailableDisplay.textContent = units;
+        }
+      } catch (err) {
+        unitsAvailableDisplay.textContent = 'Error contacting API';
+        debugResponse.textContent = String(err);
+        console.error(err);
+      } finally {
+        getBloodUnitsButton.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>

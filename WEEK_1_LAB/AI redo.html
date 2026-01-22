@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Week 1 Web Page — Joe Bove</title>
+
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --accent: #7dd3fc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 20% 0%, #152b4a 0%, var(--bg) 55%);
+      line-height: 1.5;
+    }
+
+    .container{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+
+    header{
+      margin-bottom: 28px;
+    }
+
+    h1{
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle{
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 840px){
+      .grid{ grid-template-columns: 1.2fr 1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .card h2{
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .buttons{
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    a.button-link{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      text-decoration: none;
+      background: rgba(255,255,255,.06);
+    }
+
+    a.button-link:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.25);
+      background: rgba(255,255,255,.10);
+    }
+
+    a.button-link:focus{
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.25);
+    }
+
+    .hint{
+      color: var(--muted);
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    ul{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    li{ margin: 6px 0; }
+
+    table{
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+    }
+
+    thead th{
+      text-align: left;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.78);
+      background: rgba(255,255,255,.06);
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td{
+      padding: 12px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.88);
+    }
+
+    tbody tr:hover{
+      background: rgba(255,255,255,.06);
+    }
+
+    tbody tr:last-child td{
+      border-bottom: none;
+    }
+
+    .pill{
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      font-size: 13px;
+      color: rgba(255,255,255,.86);
+      white-space: nowrap;
+    }
+
+    footer{
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .small{
+      font-size: 12px;
+      color: rgba(255,255,255,.68);
+    }
+
+    img{
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Week 1 Web Page</h1>
+      <p class="subtitle">A simple choice interface — by Joe Bove</p>
+    </header>
+
+    <div class="grid">
+      <!-- Left: Buttons / actions -->
+      <section class="card">
+        <h2>Make a choice</h2>
+        <p class="hint">Click a button to open the selected destination.</p>
+
+        <div class="buttons">
+          <a class="button-link" href="https://fred.stlouisfed.org" target="_blank" rel="noopener">
+            <img src="button_me.png" alt="Me button" width="140" />
+          </a>
+
+          <a class="button-link" href="https://chatgpt.com" target="_blank" rel="noopener">
+            <img src="button_you.png" alt="You button" width="120" />
+          </a>
+        </div>
+
+        <footer class="small">Tip: These links open in a new tab.</footer>
+      </section>
+
+      <!-- Right: List + table -->
+      <section class="card">
+        <h2>What people want</h2>
+        <p class="hint">A quick list and a structured table view.</p>
+
+        <ul>
+          <li>What she wants you to do.</li>
+          <li>What they want you to do.</li>
+          <li>What most want you to do.</li>
+          <li>What no one wants you to do.</li>
+        </ul>
+
+        <table aria-label="What people want you to do">
+          <thead>
+            <tr>
+              <th style="width: 22%;">Who</th>
+              <th>What they want</th>
+              <th style="width: 18%;">Do you do it?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>She</td>
+              <td>What she wants you to do.</td>
+              <td><span class="pill">Maybe</span></td>
+            </tr>
+            <tr>
+              <td>They</td>
+              <td>What they want you to do.</td>
+              <td><span class="pill">Sometimes</span></td>
+            </tr>
+            <tr>
+              <td>Most</td>
+              <td>What most want you to do.</td>
+              <td><span class="pill">Often</span></td>
+            </tr>
+            <tr>
+              <td>No one</td>
+              <td>What no one wants you to do.</td>
+              <td><span class="pill">Rarely</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <footer class="small" style="margin-top:18px;">
+      © 2026 Joe Bove • Built with plain HTML + CSS
+    </footer>
+  </div>
+</body>
+</html>
