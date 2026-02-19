@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Club Membership</title>
+
+  <style>
+
+    input {
+      width: 100%;
+      padding: 5px;
+      margin: 5px 5px 5px 0px;
+      box-sizing: border-box;
+
+    }
+
+  </style>
+
+</head>
+<body>
+
+<h1>Student Club Roster</h1>
+
+<h2>Add Students</h2>
+
+<label for="student-name">Student Name</label><input id="student-name" name="student-name">
+<br>
+<label for="student-id">Student ID</label><input id="student-id" name="student-id">
+<br>
+<label for="student-gpa">Student GPA</label><input id="student-gpa" name="student-gpa" type="number">
+<br>
+<button id="add-student">Add Student</button>
+
+<h2>Student List</h2>
+
+<p>There are
+  <span id="student-count">
+          <!-- use JavaScript to count the number of students, and show here -->
+        </span>
+  student(s) in the club.</p>
+
+<ul id="student-list">
+  <!-- use JavaScript to create li elements  -->
+</ul>
+
+<script>
+
+
+  // Get elements and assign to var
+  let varCountSpan = document.querySelector("#student-count")
+  let AddButton = document.querySelector("#add-student")
+  let varNameInput = document.querySelector("#student-name")
+  let varIdInput = document.querySelector("#student-id")
+  let varGpaInput = document.querySelector("#student-gpa")
+  let varStudentList = document.querySelector("#student-list")
+
+  // Display 0 in the span#student-count
+  let varNumberStudents = 0
+  varCountSpan.textContent = varNumberStudents
+
+  // Check for valid input
+  AddButton.addEventListener("click", function() {
+    
+    if (!varNameInput.value){
+      alert("Enter valid student name")
+      return
+    }    
+    if (!varIdInput.value){
+      alert("Enter valid student ID")
+      return
+    }    
+    if (!varGpaInput.value || varGpaInput.value<0 || varGpaInput.value>4){
+      alert("Enter valid GPA ranged 0 to 4")
+      return
+    }
+    
+    
+    
+    
+
+
+    let varLi = document.createElement("li")
+    // innerHTML of the li element set to a string containing the student's name, id, and GPA
+    varLi.innerHTML = `${varNameInput.value},   ID: ${varIdInput.value},   GPA: ${varGpaInput.value}`
+    // Add the new li element to ul#student-list element
+    varStudentList.append(varLi)
+
+    // Update the span#student-count value to the new number of students
+    varNumberStudents++
+    varCountSpan.textContent = varNumberStudents  
+
+    // Clear the values of the three input elements
+    varNameInput.value=""
+    varIdInput.value=""
+    varGpaInput.value=""
+  })
+
+
+
+</script>
+
+</body>
+</html>
