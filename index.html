@@ -1,1 +1,211 @@
-<p>Hello World!!!</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Repository Index</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 980px; margin: 24px auto; padding: 0 16px; }
+    header { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+    h1 { font-size: 1.25rem; margin: 0; }
+    .muted { opacity: 0.75; font-size: 0.95rem; }
+    .bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 14px 0 16px; }
+    .crumbs a { text-decoration: none; }
+    .crumbs a:hover { text-decoration: underline; }
+    input[type="search"] { padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(127,127,127,.35); min-width: 240px; }
+    .list { border: 1px solid rgba(127,127,127,.25); border-radius: 14px; overflow: hidden; }
+    .row { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-top: 1px solid rgba(127,127,127,.18); }
+    .row:first-child { border-top: 0; }
+    .row:hover { background: rgba(127,127,127,.08); }
+    .icon { width: 1.2em; text-align: center; opacity: 0.9; }
+    .name { flex: 1; }
+    .actions a { margin-left: 10px; font-size: 0.9rem; opacity: 0.85; text-decoration: none; }
+    .actions a:hover { text-decoration: underline; opacity: 1; }
+    .error { padding: 12px; border: 1px solid rgba(255,0,0,.35); border-radius: 12px; }
+    .hint { margin-top: 10px; opacity: .8; font-size: .95rem; }
+    code { background: rgba(127,127,127,.15); padding: 2px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title">Repo Index</h1>
+    <div class="muted" id="subtitle"></div>
+  </header>
+
+  <div class="bar">
+    <div class="crumbs" id="crumbs"></div>
+    <div style="flex:1"></div>
+    <input id="filter" type="search" placeholder="Filter files/folders…" autocomplete="off" />
+  </div>
+
+  <div id="status" class="muted"></div>
+  <div id="content"></div>
+
+<script>
+  // ====== CONFIG (edit these) ======
+  const OWNER  = "YOUR_GITHUB_USERNAME";
+  const REPO   = "YOUR_REPO_NAME";
+  const BRANCH = "main";          // you asked for main
+  const START_PATH = "";          // e.g. "docs" if you want to start there
+  // =================================
+
+  const titleEl = document.getElementById("title");
+  const subtitleEl = document.getElementById("subtitle");
+  const crumbsEl = document.getElementById("crumbs");
+  const statusEl = document.getElementById("status");
+  const contentEl = document.getElementById("content");
+  const filterEl = document.getElementById("filter");
+
+  titleEl.textContent = `${OWNER}/${REPO}`;
+  subtitleEl.textContent = `Browsing branch: ${BRANCH}`;
+
+  // Use URL hash for navigation, like: #/folder/subfolder
+  function getPathFromHash() {
+    const raw = decodeURIComponent(location.hash || "");
+    const p = raw.startsWith("#/") ? raw.slice(2) : "";
+    const clean = p.replace(/^\/+|\/+$/g, "");
+    if (!clean && START_PATH) return START_PATH.replace(/^\/+|\/+$/g, "");
+    return clean;
+  }
+
+  function setHashPath(path) {
+    const clean = path.replace(/^\/+|\/+$/g, "");
+    location.hash = "#/" + encodeURIComponent(clean);
+  }
+
+  function ghUrlTree(path) {
+    const p = path ? `/${path}` : "";
+    return `https://github.com/${OWNER}/${REPO}/tree/${BRANCH}${p}`;
+  }
+
+  function ghUrlBlob(path) {
+    return `https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${path}`;
+  }
+
+  function pagesUrl(path) {
+    // GitHub Pages serves files relative to the current directory.
+    // This makes links like "./folder/file.ext" work for most cases.
+    return path ? `./${path}` : "./";
+  }
+
+  async function fetchContents(path) {
+    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path ? path : ""}?ref=${encodeURIComponent(BRANCH)}`;
+    const res = await fetch(url, { headers: { "Accept": "application/vnd.github+json" }});
+    if (!res.ok) {
+      let msg = `GitHub API error (${res.status})`;
+      try {
+        const j = await res.json();
+        if (j && j.message) msg += `: ${j.message}`;
+      } catch {}
+      throw new Error(msg);
+    }
+    return res.json();
+  }
+
+  function renderCrumbs(path) {
+    const parts = path ? path.split("/") : [];
+    let html = `<a href="${ghUrlTree("")}" target="_blank" rel="noreferrer">View on GitHub</a> &nbsp;•&nbsp; `;
+    html += `<a href="javascript:void(0)" onclick="setHashPath('')">root</a>`;
+    let acc = "";
+    for (const part of parts) {
+      acc = acc ? `${acc}/${part}` : part;
+      html += ` / <a href="javascript:void(0)" onclick="setHashPath('${acc.replace(/'/g,"\\'")}')">${part}</a>`;
+    }
+    crumbsEl.innerHTML = html;
+  }
+
+  function iconFor(item) {
+    return item.type === "dir" ? "📁" : "📄";
+  }
+
+  function sortItems(items) {
+    // dirs first, then files; alphabetical
+    return items.slice().sort((a,b) => {
+      if (a.type !== b.type) return a.type === "dir" ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  function renderList(items, path) {
+    const filter = (filterEl.value || "").trim().toLowerCase();
+    const filtered = items.filter(it => it.name.toLowerCase().includes(filter));
+
+    if (!filtered.length) {
+      contentEl.innerHTML = `<div class="hint">No matches.</div>`;
+      return;
+    }
+
+    const rows = filtered.map(it => {
+      const fullPath = path ? `${path}/${it.name}` : it.name;
+
+      if (it.type === "dir") {
+        return `
+          <div class="row">
+            <div class="icon">${iconFor(it)}</div>
+            <div class="name"><a href="javascript:void(0)" onclick="setHashPath('${fullPath.replace(/'/g,"\\'")}')">${it.name}/</a></div>
+            <div class="actions">
+              <a href="${ghUrlTree(fullPath)}" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="row">
+            <div class="icon">${iconFor(it)}</div>
+            <div class="name">${it.name}</div>
+            <div class="actions">
+              <a href="${pagesUrl(fullPath)}" target="_blank" rel="noreferrer">Open</a>
+              <a href="${ghUrlBlob(fullPath)}" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
+          </div>
+        `;
+      }
+    }).join("");
+
+    contentEl.innerHTML = `<div class="list">${rows}</div>`;
+  }
+
+  async function load() {
+    const path = getPathFromHash();
+    renderCrumbs(path);
+    statusEl.textContent = path ? `Loading: ${path}/` : "Loading: root/";
+    contentEl.innerHTML = "";
+
+    try {
+      const data = await fetchContents(path);
+      if (!Array.isArray(data)) {
+        // When the API returns a single file object, not a directory listing
+        contentEl.innerHTML = `<div class="hint">That path is a file. Use the GitHub link above to view it.</div>`;
+        statusEl.textContent = "";
+        return;
+      }
+
+      const items = sortItems(data);
+      renderList(items, path);
+      statusEl.textContent = "";
+    } catch (err) {
+      contentEl.innerHTML = `
+        <div class="error">
+          <div><strong>Couldn’t load directory listing.</strong></div>
+          <div class="hint">${err.message}</div>
+          <div class="hint">
+            If this is a <strong>private repo</strong>, the browser can’t access it without authentication.
+            If it’s public, you may be hitting API rate limits—try again later or sign in and refresh.
+          </div>
+        </div>
+      `;
+      statusEl.textContent = "";
+    }
+  }
+
+  window.setHashPath = setHashPath; // for onclick handlers
+  window.addEventListener("hashchange", load);
+  filterEl.addEventListener("input", () => load());
+
+  // initial
+  if (!location.hash) setHashPath(START_PATH || "");
+  else load();
+</script>
+</body>
+</html>
