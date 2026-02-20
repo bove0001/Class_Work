@@ -153,7 +153,10 @@
         return `
           <div class="row">
             <div class="icon">${iconFor(it)}</div>
-            <div class="name">${it.name}</div>
+            <a href="${pagesUrl(fullPath)}" target="_blank" rel="noreferrer">
+            <div class="name">${it.name}
+            </a>
+            </div>
             <div class="actions">
               <a href="${pagesUrl(fullPath)}" target="_blank" rel="noreferrer">Open</a>
               <a href="${ghUrlBlob(fullPath)}" target="_blank" rel="noreferrer">GitHub</a>
