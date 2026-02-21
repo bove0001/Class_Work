@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Repository Index</title>
+  <title>Joe Bove Repository Index</title>
   <style>
     :root { color-scheme: light dark; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 980px; margin: 24px auto; padding: 0 16px; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; }
     header { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
     h1 { font-size: 1.25rem; margin: 0; }
     .muted { opacity: 0.75; font-size: 0.95rem; }
@@ -28,6 +28,12 @@
   </style>
 </head>
 <body>
+
+  <header>
+    <h1 id="customMessage">Cusotm Message</h1>
+    <div class="muted" id="subtitle"></div>
+  </header>
+<br>
   <header>
     <h1 id="title">Repo Index</h1>
     <div class="muted" id="subtitle"></div>
@@ -44,12 +50,14 @@
 
 <script>
   // ====== CONFIG (edit these) ======
+  const CUSTOM = "Joe Bove ITEC 2560 Github Index"
   const OWNER  = "bove0001";
   const REPO   = "Class_Work";
   const BRANCH = "main";          // you asked for main
   const START_PATH = "";          // e.g. "docs" if you want to start there
   // =================================
 
+  const customMessageEl = document.getElementById("customMessage")
   const titleEl = document.getElementById("title");
   const subtitleEl = document.getElementById("subtitle");
   const crumbsEl = document.getElementById("crumbs");
@@ -57,6 +65,7 @@
   const contentEl = document.getElementById("content");
   const filterEl = document.getElementById("filter");
 
+  customMessageEl.textContent = `${CUSTOM}`;
   titleEl.textContent = `${OWNER}/${REPO}`;
   subtitleEl.textContent = `Browsing branch: ${BRANCH}`;
 
@@ -86,6 +95,7 @@
   function pagesUrl(path) {
     // GitHub Pages serves files relative to the current directory.
     // This makes links like "./folder/file.ext" work for most cases.
+
     return path ? `./${path}` : "./";
   }
 
@@ -142,7 +152,7 @@
       if (it.type === "dir") {
         return `
           <div class="row">
-            <div class="icon">${iconFor(it)}</div>
+            <div class="icon">${iconFor(it)}</div> 
             <div class="name"><a href="javascript:void(0)" onclick="setHashPath('${fullPath.replace(/'/g,"\\'")}')">${it.name}/</a></div>
             <div class="actions">
               <a href="${ghUrlTree(fullPath)}" target="_blank" rel="noreferrer">GitHub</a>
@@ -152,11 +162,12 @@
       } else {
         return `
           <div class="row">
-            <div class="icon">${iconFor(it)}</div>
-            <a href="${pagesUrl(fullPath)}" target="_blank" rel="noreferrer">
-            <div class="name">${it.name}
-            </a>
+            <div class="icon">${iconFor(it)}</div>            
+              <a href="${pagesUrl(fullPath)}" target="_blank" rel="noreferrer">  
+              <div class="name">${it.name}
+              </a>
             </div>
+            
             <div class="actions">
               <a href="${pagesUrl(fullPath)}" target="_blank" rel="noreferrer">Open</a>
               <a href="${ghUrlBlob(fullPath)}" target="_blank" rel="noreferrer">GitHub</a>
