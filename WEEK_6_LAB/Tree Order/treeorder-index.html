@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <title>Tree Order Form</title>
-
+      <!-- Bootstrap 5 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
   <style>
       
       input, select {
@@ -26,6 +30,7 @@
     <p>Enter information to order your tree. All fields are required.</p>
 
     <h2>Order Information</h2>
+    <form>
 
     <label for="homeowner-name">Homeowner Name</label><br><input id="homeowner-name" name="homeowner-name">
     <br>
@@ -53,7 +58,7 @@
     <br>
 
     <button id="submit-order">Submit Order</button>    
-
+    </form>
     <h2>Order Summary</h2>
 
     <p id="order-summary">
