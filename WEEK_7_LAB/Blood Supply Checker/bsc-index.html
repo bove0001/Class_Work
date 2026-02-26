@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div>
+        <label for="blood-type">Select Blood Type</label>
+            <select id="blood-type">
+                <option value="Apositive">A+</option>
+                <option value="Anegative">A-</option>
+                <option value="Bpositive">B+</option>
+                <option value="Bnegative">B-</option>
+                <option value="ABpositive">AB+</option>
+                <option value="ABnegative">AB-</option>
+                <option value="Opositive">O+</option>
+                <option value="Onegative">O-</option>
+
+            </select>
+    </div>
+
+<br>
+    <div>
+        <button id="rbs-button">Request Blood Supply</button>
+    </div>
+<br>
+    <div>
+        <p id="blood-type-result"></p>
+    </div>
+    
+
+<script>
+    const rbsButton = document.getElementById("rbs-button")
+    const bloodType = document.getElementById("blood-type")
+    const results= document.getElementById("blood-type-result")
+
+
+    rbsButton.addEventListener("click", function() {
+        console.log(bloodType.value)
+
+    let url = "https://blood-group-api.wl.r.appspot.com/api/blood_units_by_group?group="+bloodType.value
+    fetch(url)
+        .then(function(theEntireServerResponse) {
+            const json = theEntireServerResponse.json()
+            return json
+            })
+        .then((jsonData) => {
+            console.log("API response:", jsonData);
+            // alert("Blood avaiable:" + JSON.stringify(jsonData, null, 5));
+            results.innerHTML=`There are ${jsonData.blood_availability.units_available} unit of type ${jsonData.blood_availability.group_name} blood`
+            })
+        .catch((error) => {
+            console.log(error);
+            alert("Sorry, request failed.");
+            });
+
+    })
+</script>
+</body>
+</html>
