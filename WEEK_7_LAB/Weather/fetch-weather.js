@@ -60,6 +60,10 @@ fetch(weatherUrl)
 
             let details = forecastPeriodData.detailedForecast
             let detailsTableData = document.createElement("td")
+            detailsTableData.style.width = "40ch";
+            detailsTableData.style.maxWidth = "40ch";
+            detailsTableData.style.whiteSpace = "normal";      // allow wrapping
+            detailsTableData.style.overflowWrap = "anywhere";  // break long chunks if needed
             detailsTableData.innerHTML = details
             tableRow.appendChild(detailsTableData)
 
