@@ -23,6 +23,12 @@ fetch(weatherUrl)
             console.log(periodName)
             // Retrieve and add periodName 
             let periodNameTableData = document.createElement("td")
+            if (periodName.slice(-5).toLowerCase()==="night") {
+            periodNameTableData.classList.add("text-end")
+            tableRow.style.backgroundColor = "#989999";
+            }
+            periodNameTableData.style.width = "20ch"
+            periodNameTableData.style.whiteSpace = "nowrap"
             periodNameTableData.innerHTML = periodName
             tableRow.appendChild(periodNameTableData)
 
@@ -30,16 +36,26 @@ fetch(weatherUrl)
             let temperature = forecastPeriodData.temperature
             let temperatureUnit = forecastPeriodData.temperatureUnit
             let temperatureTableData = document.createElement("td")
+            temperatureTableData.classList.add("text-center");  
             temperatureTableData.innerHTML = temperature+temperatureUnit
             tableRow.appendChild(temperatureTableData)
 
-            // Retrieve and add temperature 
+            // Retrieve and add wind 
+            let wind = forecastPeriodData.windSpeed
+            let windDirect = forecastPeriodData.windDirection
+            let windTableData = document.createElement("td")
+            windTableData.innerHTML = wind+" "+windDirect
+            tableRow.appendChild(windTableData)
+
+            // Retrieve and add icons 
             let weatherIcon = forecastPeriodData.icon
             let weatherIconTableData = document.createElement("td")
             let weatherIconImage = document.createElement("img")
             weatherIconImage.src = weatherIcon
             weatherIconTableData.appendChild(weatherIconImage)
             tableRow.appendChild(weatherIconTableData)
+
+
 
 
             let details = forecastPeriodData.detailedForecast

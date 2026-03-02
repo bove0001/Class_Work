@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-
+<!-- After class discussion this seemed to be the way to go vs. two drop downs less ambiguity with languages etc.-->
     <div>
         <label for="blood-type">Select Blood Type</label>
             <select id="blood-type">
@@ -41,7 +41,17 @@
     rbsButton.addEventListener("click", function() {
         console.log(bloodType.value)
 
+    // Separate the blood type and rh from the value and then add them back together to meet claas requirements
+    const full = bloodType.value               // example "ABnegative"
+    const rh = full.endsWith("negative") ? "negative" : "positive" // identify the RH and assign value
+    const type = full.replace(rh, "")          // remove the end of the value from the full and you are left with for example "AB" (or "A", "B", "O")
+    console.log("type:", type, "rh:", rh);
+    bloodType.value=type+rh    // add them back together before adding to the url
+
     let url = "https://blood-group-api.wl.r.appspot.com/api/blood_units_by_group?group="+bloodType.value
+
+
+
     fetch(url)
         .then(function(theEntireServerResponse) {
             const json = theEntireServerResponse.json()
