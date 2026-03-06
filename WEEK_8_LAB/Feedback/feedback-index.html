@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Feedback</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <link href="feedback-style.css" type="text/css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+</head>
+
+
+<body>
+<div class="bg-dark-subtle header">
+  <h1>Student Feedback</h1>
+  <h3>Please provide your feedback</h3>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <h2>Insturctions</h2>
+        <p>Please enter your information below we value your input.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et tellus et metus condimentum gravida quis id eros. Proin quis sapien gravida, luctus purus at, vehicula dui. Vivamus imperdiet tempor sem, in viverra nulla laoreet consequat.</p>
+    </div>
+
+
+    <div class="col-md-7">
+        <form action="#" method="post">
+            <label for="studentName">Name</label><br />
+            <input class="form-control" type="text" id="studentName" name="student_name" /><br /><br />
+
+            <label class="form-label" for="studentEmail">email</label><br />
+            <input class="form-control" type="email" id="studentEmail" name="student_email" /><br /><br />
+
+            <label class="form-label" for="comments">Comments</label><br />
+            <textarea class="form-control" id="comments" name="comments" rows="4" cols="30" required></textarea><br /><br />
+
+            <p>Are you a current student?</p>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="currentYes" name="current_student" value="yes" checked />
+                <label class="form-check-label" for="currentYes">Yes</label>
+            </div>
+            
+            
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="currentNo" name="current_student" value="no" />
+                <label class="form-check-label" for="currentNo">No</label>
+            </div>
+            <br /><br />
+
+            <input class="btn btn-primary" type="submit" value="Submit" />
+        </form> 
+    </div>
+</div>
+</body>
+</html>

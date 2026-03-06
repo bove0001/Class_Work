@@ -1,0 +1,109 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container py-4">
+  <div class="mx-auto" style="max-width: 720px;">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h3 mb-1">Thanks!</h1>
+        <p class="text-muted mb-4">Here are your PITI results.</p>
+
+        <h2 class="h5 mb-3">Loan details</h2>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-4">
+            <tbody>
+              <tr><th class="text-nowrap" scope="row">Principal</th><td>${{principal}}</td></tr>
+              <tr><th scope="row">Interest Rate</th><td>{{interest_rate}}</td></tr>
+              <tr><th scope="row">Loan Term</th><td>{{loan_term}} years</td></tr>
+              <tr><th scope="row">Property Tax (annual)</th><td>${{property_tax}}</td></tr>
+              <tr><th scope="row">Home Insurance (annual)</th><td>${{home_insurance}}</td></tr>
+              {{#if has_other_monthly}}
+              <tr><th scope="row">Other Monthly Payments</th><td>${{other_monthly}}</td></tr>
+              {{/if}}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-3 bg-light rounded mb-3">
+          <div class="d-flex justify-content-between align-items-baseline">
+            <span class="fw-semibold">Estimated monthly payment (PITI)</span>
+            <span class="fs-4 fw-bold">${{monthly_payment}}</span>
+          </div>
+          <small class="text-muted">Estimate only — excludes PMI/HOA unless added separately.</small>
+        </div>
+
+        <h3 class="h6 mb-2">Monthly breakdown</h3>
+        <ul class="list-group mb-4">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Principal &amp; Interest</span>
+            <span class="fw-semibold">${{principal_and_interest}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Property Tax</span>
+            <span class="fw-semibold">${{monthly_property_tax}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Home Insurance</span>
+            <span class="fw-semibold">${{monthly_home_insurance}}</span>
+          </li>
+          {{#if has_other_monthly}}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Other Monthly Payments</span>
+            <span class="fw-semibold">${{other_monthly}}</span>
+          </li>
+          {{/if}}
+        </ul>
+
+        <!-- Buttons row -->
+        <div class="d-flex gap-2 flex-wrap">
+          <a class="btn btn-primary" href="/piti-calculator">Calculate Another PITI</a>
+
+          <button class="btn btn-secondary"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#amortTable"
+                  aria-expanded="false"
+                  aria-controls="amortTable">
+            Show Amortization Table
+          </button>
+        </div>
+
+        <!-- Collapsible amortization table -->
+        <div class="collapse mt-3" id="amortTable">
+          <div class="card card-body">
+            <small class="text-muted d-block mb-2">
+              Amortization shows <strong>principal + interest only</strong>
+              (does not include taxes/insurance/HOA/PMI).
+            </small>
+
+            <div class="table-responsive" style="max-height: 420px; overflow: auto;">
+              <table class="table table-sm table-striped mb-0">
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th class="text-end">Payment</th>
+                    <th class="text-end">Interest</th>
+                    <th class="text-end">Principal</th>
+                    <th class="text-end">Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each amortization}}
+                  <tr>
+                    <td>{{month}}</td>
+                    <td class="text-end">${{payment}}</td>
+                    <td class="text-end">${{interest}}</td>
+                    <td class="text-end">${{principal}}</td>
+                    <td class="text-end">${{balance}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

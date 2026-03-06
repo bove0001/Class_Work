@@ -1,6 +1,15 @@
 const weatherUrl="https://api.weather.gov/gridpoints/MPX/166,72/forecast"
 const weatherTable = document.getElementById("weather-forecast")
 
+// Here's the time
+let timeElement = document.getElementById("currentTime")
+setInterval( () => {
+    let date=Date()
+    timeElement.innerHTML=date
+}, 1000) // 1000 milliseocnds
+
+
+
 fetch(weatherUrl)
     .then( response => response.json())
     .then( weatherJson => {
