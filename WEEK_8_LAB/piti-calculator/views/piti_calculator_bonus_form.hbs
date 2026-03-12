@@ -143,16 +143,6 @@
                   <span class="fw-semibold">${{other_monthly}}</span>
                 </li>
                 {{/if}}
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div>
-                    <div>Minimum required income</div>
-                    <small class="text-muted">So PITI is 40% of income</small>
-                  </div>
-                  <div class="text-end">
-                    <div class="fw-semibold">${{min_income_monthly}}/mo</div>
-                    <small class="text-muted">${{min_income_annual}}/yr</small>
-                  </div>
-                </li>
               </ul>
 
               <button class="btn btn-secondary"
@@ -206,6 +196,50 @@
             {{/if}}
 
           </div>
+          <div class="card shadow-sm mt-4">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-baseline">
+        <h3 class="h6 mb-0">Fill Missing (Principal / Rate / Payment)</h3>
+        <span class="badge text-bg-secondary">PI only</span>
+        </div>
+        <p class="text-muted small mb-3">
+        Enter any <strong>two</strong> fields below and click <strong>Fill Missing</strong>.
+        Uses the loan term from the form on the left.
+        </p>
+
+        <div id="fillMissingMsg" class="alert alert-warning py-2 d-none" role="alert"></div>
+
+        <div class="row g-2">
+        <div class="col-md-4">
+            <label class="form-label" for="fmPrincipal">Loan Amount</label>
+            <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="number" class="form-control" id="fmPrincipal" step="0.01" placeholder="e.g., 300000">
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label" for="fmRate">Interest Rate</label>
+            <div class="input-group">
+            <input type="number" class="form-control" id="fmRate" step="0.001" placeholder="e.g., 6.5">
+            <span class="input-group-text">%</span>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label" for="fmPayment">Monthly Payment</label>
+            <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="number" class="form-control" id="fmPayment" step="0.01" placeholder="e.g., 1896.20">
+            </div>
+        </div>
+        </div>
+
+        <button class="btn btn-secondary mt-3" type="button" id="fillMissingBtn">
+        Fill Missing
+        </button>
+    </div>
+</div>
         </div>
       </div>
 
@@ -214,4 +248,134 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function showFillMsg(text, type = "warning") {
+      const el = document.getElementById("fillMissingMsg");
+      el.className = `alert alert-${type} py-2`;
+      el.textContent = text;
+      el.classList.remove("d-none");
+    }
+
+    function hideFillMsg() {
+      document.getElementById("fillMissingMsg").classList.add("d-none");
+    }
+
+    function getLoanTermMonths() {
+      // Reads your existing left-form inputs
+      const years = Number(document.getElementById("loanTermYears")?.value || 0);
+      const months = Number(document.getElementById("loanTermMonths")?.value || 0);
+      const n = (years * 12) + months;
+      return n;
+    }
+
+    function normalizeAnnualRate(input) {
+      // Treat 6.5 as percent, 0.065 as decimal
+      let r = Number(input);
+      if (!Number.isFinite(r)) return NaN;
+      if (r > 1) r = r / 100;
+      return r; // annual decimal rate
+    }
+
+    function paymentFromPrincipalRate(P, annualRateDec, nMonths) {
+      const r = annualRateDec / 12;
+      if (r === 0) return P / nMonths;
+      return (P * r) / (1 - Math.pow(1 + r, -nMonths));
+    }
+
+    function principalFromPaymentRate(M, annualRateDec, nMonths) {
+      const r = annualRateDec / 12;
+      if (r === 0) return M * nMonths;
+      return (M * (1 - Math.pow(1 + r, -nMonths))) / r;
+    }
+
+    // Solve for annual rate (decimal) using bisection
+    function rateFromPrincipalPayment(P, M, nMonths) {
+      const paymentAtZero = P / nMonths;
+      if (M < paymentAtZero) return null; // impossible
+
+      let low = 0;       // annual decimal
+      let high = 0.5;    // 50% annual to start
+      // Increase high until payment(high) >= M or high gets too large
+      while (paymentFromPrincipalRate(P, high, nMonths) < M && high < 5) {
+        high *= 2; // up to 500% annual cap
+      }
+      if (high >= 5 && paymentFromPrincipalRate(P, high, nMonths) < M) return null;
+
+      for (let i = 0; i < 80; i++) {
+        const mid = (low + high) / 2;
+        const pm = paymentFromPrincipalRate(P, mid, nMonths);
+        if (pm > M) high = mid;
+        else low = mid;
+      }
+      return (low + high) / 2;
+    }
+
+    document.getElementById("fillMissingBtn")?.addEventListener("click", () => {
+      hideFillMsg();
+
+      const n = getLoanTermMonths();
+      if (!Number.isFinite(n) || n <= 0) {
+        showFillMsg("Enter a valid loan term (years/months) in the form on the left first.", "warning");
+        return;
+      }
+
+      const pEl = document.getElementById("fmPrincipal");
+      const rEl = document.getElementById("fmRate");
+      const mEl = document.getElementById("fmPayment");
+
+      const pRaw = pEl.value.trim();
+      const rRaw = rEl.value.trim();
+      const mRaw = mEl.value.trim();
+
+      const missing = [pRaw === "", rRaw === "", mRaw === ""].filter(Boolean).length;
+      if (missing !== 1) {
+        showFillMsg("Leave exactly ONE field blank (enter the other two).", "warning");
+        return;
+      }
+
+      // Parse present values
+      const P = pRaw === "" ? NaN : Number(pRaw);
+      const M = mRaw === "" ? NaN : Number(mRaw);
+      const annualRateDec = rRaw === "" ? NaN : normalizeAnnualRate(rRaw);
+
+      // Basic validation
+      if (pRaw !== "" && (!Number.isFinite(P) || P <= 0)) {
+        showFillMsg("Loan amount must be a positive number.", "warning");
+        return;
+      }
+      if (mRaw !== "" && (!Number.isFinite(M) || M <= 0)) {
+        showFillMsg("Monthly payment must be a positive number.", "warning");
+        return;
+      }
+      if (rRaw !== "" && (!Number.isFinite(annualRateDec) || annualRateDec < 0)) {
+        showFillMsg("Interest rate must be 0 or a positive number.", "warning");
+        return;
+      }
+
+      try {
+        if (pRaw === "") {
+          // Fill Principal
+          const Pcalc = principalFromPaymentRate(M, annualRateDec, n);
+          pEl.value = Pcalc.toFixed(2);
+          showFillMsg("Filled loan amount.", "success");
+        } else if (mRaw === "") {
+          // Fill Monthly Payment
+          const Mc = paymentFromPrincipalRate(P, annualRateDec, n);
+          mEl.value = Mc.toFixed(2);
+          showFillMsg("Filled monthly payment.", "success");
+        } else {
+          // Fill Rate
+          const rateDec = rateFromPrincipalPayment(P, M, n);
+          if (rateDec === null) {
+            showFillMsg("Could not solve for rate with those values (check term/payment).", "warning");
+            return;
+          }
+          rEl.value = (rateDec * 100).toFixed(3); // percent
+          showFillMsg("Filled interest rate.", "success");
+        }
+      } catch (e) {
+        showFillMsg("Something went wrong calculating the missing value.", "warning");
+      }
+    });
+  </script>
 </body>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PITI Calculator</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="feedback-style.css" type="text/css" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+  <header class="border-bottom bg-white">
+    <div class="container py-4">
+      <h1 class="h3 mb-1">PITI Calculator</h1>
+      <p class="text-muted mb-0">Enter your details to estimate your monthly payment.</p>
+    </div>
+  </header>
+
+  <main class="container py-4">
+    <div class="row g-4">
+      {{!-- <div class="col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="h5 mb-3">Instructions</h2>
+            <p class="mb-2">Fill out the form to calculate an estimated monthly payment.</p>
+            <p class="text-muted mb-0">
+              Includes Principal + Interest + Property Taxes + Home Insurance, plus optional monthly items like HOA/PMI.
+            </p>
+          </div>
+        </div>
+      </div> --}}
+
+      <div class="col-lg-4">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="h5 mb-3">Your loan information</h2>
+
+            <form action="/submit-piti" method="post">
+              <div class="mb-3">
+                <label for="principal" class="form-label">Principal</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="principal" name="principal" step="0.01" required>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="interestRate" class="form-label">Interest Rate</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="interestRate" name="interest_rate" step="0.005" required>
+                  <span class="input-group-text">%</span>
+                </div>
+                <div class="form-text">Enter the annual interest rate (example: 6.5).</div>
+              </div>
+
+            <!-- ✅ Loan term: years + months -->
+            <div class="mb-3">
+            <label class="form-label">Loan Term</label>
+
+            <div class="row g-2">
+                <div class="col-6">
+                <div class="input-group">
+                    <input
+                    type="number"
+                    class="form-control"
+                    id="loanTermYears"
+                    name="loan_term_years"
+                    min="0"
+                    value="0"
+                    >
+                    <span class="input-group-text">years</span>
+                </div>
+                </div>
+
+                <div class="col-6">
+                <div class="input-group">
+                    <input
+                    type="number"
+                    class="form-control"
+                    id="loanTermMonths"
+                    name="loan_term_months"
+                    min="0"
+                    placeholder="e.g., 120"
+                    >
+                    <span class="input-group-text">months</span>
+                </div>
+                </div>
+            </div>
+
+            <div class="form-text">
+                You can enter <strong>months only</strong> (example: 120) and leave years at 0.
+            </div>
+            </div>
+
+            <div class="row g-2">
+                <div class="col-6">
+                <label for="propertyTax" class="form-label">Property Tax (annual)</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="propertyTax" name="property_tax" step="0.01">
+                </div>
+              </div>
+
+                <div class="col-6">
+                <label for="homeInsurance" class="form-label">Home Insurance (annual)</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="homeInsurance" name="home_insurance" step="0.01" >
+                </div>
+              </div>
+
+              <!-- ✅ Other monthly payments (HOA / PMI) -->
+              <div class="mb-3">
+                <label for="otherMonthly" class="form-label">Other Monthly Payments (optional)</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="otherMonthly" name="other_monthly" step="0.01" value="0">
+                  <span class="input-group-text">/mo</span>
+                </div>
+                <div class="form-text">Example: HOA dues ($250/mo) or PMI ($90/mo).</div>
+              </div>
+
+              <button class="btn btn-primary" type="submit">Calculate PITI</button>
+              <a class="btn btn-outline-secondary ms-2" href="/">Home</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
