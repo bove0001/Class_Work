@@ -19,9 +19,8 @@ router.post('/submit-feedback', (req, res) => {
   console.log(formData);
 
   // Pass the fields your thank_you.hbs expects
-  res.render('thank_you', req.body);
-
+  res.render('thank_you', formData);
+  
 });
-
 
 module.exports = router;
