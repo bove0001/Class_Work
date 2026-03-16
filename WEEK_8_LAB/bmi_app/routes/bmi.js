@@ -35,15 +35,11 @@ router.get('/calculate', function(req, res) {
     // If enters something invalid, parseFloat returns not a number.
     const height = parseFloat(formData.height)
     const weight = parseFloat(formData.weight)
-    const bmi = weight / (height * height)
+    const bmi = (weight / (height * height)).toFixed(2);
 
     let classification = 'fat'
 
-    // Standard BMI categories:
-    // Underweight: < 18.5
-    // Normal: 18.5–24.9
-    // Overweight: 25–29.9
-    // Obese: >= 30
+    // Standard BMI categories
     if (bmi < 18.5) {
         classification = 'underweight'
     } else if (bmi < 25) {

@@ -14,7 +14,7 @@ console.log("indexRouter value:", indexRouter);
 app.use(express.urlencoded({ extended: false })); // ***** parses HTML form posts into req.body *****
 app.use('/', indexRouter); //all requests to the root path will be handled by the indexRouter
 
-const statoicFileLocation = path.join(__dirname, 'public'); // location of static files
+const staticFileLocation = path.join(__dirname, 'public'); // location of static files
 app.use(express.static(path.join(__dirname, "public"))); // static files from the public directory
 
 const server = app.listen(process.env.PORT || 3000, function(){

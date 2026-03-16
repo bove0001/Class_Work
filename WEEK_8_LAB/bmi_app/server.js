@@ -1,15 +1,18 @@
-const express = require('express') 
-const path = require('path') 
-const bmiRouter = require('./routes/bmi') 
+const express = require('express')  // This line is importing the Express 
+const path = require('path')  // This line is importing the Path library
+const bmiRouter = require('./routes/bmi') // This line is importing the bmiRouter 
 
 const app = express() 
-// app.set is configuring the view engine for our app. It is telling Express to use the Handlebars (hbs) view engine and to look for views in the 'views' directory.
+// app.set is configuring the view engine for the app. 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'hbs')
-// app.use is adding middleware to our Express application. In this case, we are telling Express to use the bmiRouter for any routes that start with '/'.
+// app.use is adding Express application
 app.use('/', bmiRouter) 
 
-// TODO set up HBS 
+const staticFileLocation = path.join(__dirname, 'public') // static file location for the app.
+app.use(express.static(path.join(__dirname, 'public')))  // static files from the public directory.
+
+
 
 let server = app.listen(3000, function() { 
     console.log('Server running on port 3000') })
