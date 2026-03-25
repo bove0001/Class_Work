@@ -1,0 +1,24 @@
+const express = require('express');
+const router = express.Router();
+
+//responds to GET requests to the root path of homepage
+router.get('/', function(req, res, next) {
+    res.render('index', { 
+        title: 'Feedback Application',
+        author: 'Joe Bove',
+        timePageLoadedAt: new Date()
+        
+    });
+});
+
+router.get('/feedback-form', function (req, res, next) {
+  res.render('student_feedback_form' );
+});
+
+router.get('/submit-feedback', function (req, res, next) {
+    const formData = req.query;
+    console.log(formData);
+    res.render('thank_you', {});
+});
+    
+module.exports = router;

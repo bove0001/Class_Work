@@ -1,0 +1,42 @@
+
+<div class="bg-dark-subtle header">
+  <h1>Student Feedback</h1>
+  <h3>Please provide your feedback</h3>
+</div>
+
+<div class="row">  <!-- Row for instructions and form -->
+    <div class="col-md-5">  <!-- Column for instructions -->
+        <h2>Insturctions</h2>
+        <p>Please enter your information below we value your input.</p>
+    </div>
+
+
+    <div class="col-md-7"> <!-- Column for form -->
+        <form action="/submit-feedback" method="post">
+            <label for="studentName">Name</label><br />
+            <input class="form-control" type="text" id="studentName" name="student_name" /><br /><br />
+
+            <label class="form-label" for="studentEmail">email</label><br />
+            <input class="form-control" type="email" id="studentEmail" name="student_email" /><br /><br />
+
+            <label class="form-label" for="comments">Comments</label><br />
+            <textarea class="form-control" id="comments" name="comments" rows="4" cols="30" required></textarea><br /><br />
+
+            <p>Are you a current student?</p> <!-- Question for current student status -->
+
+            <div class="form-check"> <!-- Radio button for "Yes" option -->
+                <input class="form-check-input" type="radio" id="currentYes" name="current_student" value="yes" checked />
+                <label class="form-check-label" for="currentYes">Yes</label>
+            </div>
+            
+            
+            <div class="form-check"> <!-- Radio button for "No" option -->
+                <input class="form-check-input" type="radio" id="currentNo" name="current_student" value="no" />
+                <label class="form-check-label" for="currentNo">No</label>
+            </div>
+            <br /><br />
+
+            <input class="btn btn-primary" type="submit" value="Submit" /> <!-- Submit button -->
+        </form> 
+    </div>
+</div>

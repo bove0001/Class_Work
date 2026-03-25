@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+</head>
+<body>
+  <h1>{{title}}</h1>
+
+  <form action="/recipe" method="POST">
+    <label for="ingredients">Enter ingredients:</label>
+    <br>
+    <input type="text" id="ingredients" name="ingredients" required>
+    <br><br>
+    <button type="submit">Generate Recipe</button>
+  </form>
+</body>
+</html>
