@@ -3,9 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello Vue</title>
+    <title>Hello Vue Forms
+    </title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
 
-    
+ <div id="app"><h1>Enter your name:
+        <input v-model="name" type="text">
+
+        <p v-if="name">Hello, {{ name }}!</p>
+        <p v-else>Please enter your name.</p>
+
+        <button @click="name = ''">Clear</button>
+
+ </h1>
+
+ </div>
+
+ <script>
+    const { createApp, ref } = Vue
+
+    createApp({
+        setup() {
+ 
+            const name = ref('')
+
+            function clearName() {
+                name.value = ''
+            }
+
+            return {
+                name
+            }
+        }
+    }).mount('#app')
+</script>
+
+</body>
+</html>
