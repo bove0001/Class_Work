@@ -1,0 +1,15 @@
+You're asking for a variable in your template but Vue can't find it. It is undefinded. You define it to fix the error. Usually here:
+
+// Make data available to HTML 
+return {
+   newStudentName, 
+   newStarID,
+   addStudent,
+   formErrors,
+   arrivedOrLeft,
+   mostRecentStudent,
+   studentList,
+   deleteStudent,
+   sortedStudents,
+   studentCount } } })
+.mount('#app') </script> </body> </html> 
