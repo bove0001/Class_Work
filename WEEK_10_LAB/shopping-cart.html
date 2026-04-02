@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Vue Shopping Cart</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 25%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ price }}</td>
+            <td><input v-model="quantity" type="number"></td>
+            <td>{{ total }}</td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    const { createApp, ref, computed } = Vue
+
+    createApp({
+        setup() {
+            const name = ref('Hat')
+            const price = ref(19.99)
+            const quantity = ref(1)
+
+            const total = computed(() => (price.value * quantity.value).toFixed(2))
+
+            return {
+                name,
+                price,
+                quantity,
+                total
+            }
+        }
+    }).mount('#app')
+</script>
+
+</body>
+</html>

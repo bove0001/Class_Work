@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Vue To Do List</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 25%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <h1>To-Do List</h1>
+    
+    <label>Please enter a new task:</label>
+    <input v-model="newTask" type="text">
+    <button @click="addTask">Add Task</button>
+
+    <ul>
+        <li v-for="task in taskList">
+            {{ task }}
+        </li>
+    </ul>
+</div>
+
+<script>
+    const { createApp, ref } = Vue
+
+    createApp({
+        setup() {
+            const taskList = ref([
+                'Task 1',
+                'Task 2',
+                'Task 3'
+            ])
+
+            const newTask = ref('')
+
+            function addTask() {
+                if (newTask.value.trim() !== '') {
+                    taskList.value.push(newTask.value)
+                    newTask.value = ''
+                }
+            }
+
+            return {
+                taskList,
+                newTask,
+                addTask
+            }
+        }
+    }).mount('#app')
+</script>
+
+</body>
+</html>
