@@ -6,17 +6,20 @@
     <title>Hello Vue Shopping Cart</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
+        /* makes the table borders combine into one line */
         table {
             border-collapse: collapse;
             width: 25%;
         }
 
+        /* styles the table cells and headers */
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
         }
 
+        /* gives the header row a light background */
         th {
             background-color: #f2f2f2;
         }
@@ -33,25 +36,36 @@
             <th>Total</th>
         </tr>
         <tr>
+            <!-- displays the product name from Vue data -->
             <td>{{ name }}</td>
+
+            <!-- shows the price value -->
             <td>{{ price }}</td>
+
+            <!-- v-model connects the input to quantity -->
             <td><input v-model="quantity" type="number"></td>
+
+            <!-- shows the computed total -->
             <td>{{ total }}</td>
         </tr>
     </table>
 </div>
 
 <script>
+    // createApp starts the app, ref makes values reactive, computed calculates from other values
     const { createApp, ref, computed } = Vue
 
     createApp({
         setup() {
+            // ref stores reactive data, so the page updates when values change
             const name = ref('Hat')
             const price = ref(19.99)
             const quantity = ref(1)
 
+            // computed recalculates total whenever price or quantity changes
             const total = computed(() => (price.value * quantity.value).toFixed(2))
 
+            // return makes these available in the html
             return {
                 name,
                 price,
@@ -59,7 +73,7 @@
                 total
             }
         }
-    }).mount('#app')
+    }).mount('#app') // mounts the Vue app to the div with id app
 </script>
 
 </body>

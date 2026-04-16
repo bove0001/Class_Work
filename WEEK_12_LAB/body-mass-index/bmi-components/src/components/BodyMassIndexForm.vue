@@ -7,7 +7,7 @@ const weight = ref(0)
 // height value
 const height = ref(0)
 
-// custom event
+// event for sending stats to parent
 const emit = defineEmits(['stats-entered'])
 
 // send values to parent

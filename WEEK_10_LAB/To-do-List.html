@@ -6,6 +6,7 @@
     <title>Hello Vue To Do List</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
+        /* this css styles the list area, even though we're not using a table now */
         table {
             border-collapse: collapse;
             width: 25%;
@@ -28,10 +29,14 @@
     <h1>To-Do List</h1>
     
     <label>Please enter a new task:</label>
+    <!-- v-model connects the input box to the newTask variable -->
     <input v-model="newTask" type="text">
+
+    <!-- @click runs the addTask function when the button is pressed -->
     <button @click="addTask">Add Task</button>
 
     <ul>
+        <!-- v-for loops through each item in the array -->
         <li v-for="task in taskList">
             {{ task }}
         </li>
@@ -39,32 +44,39 @@
 </div>
 
 <script>
+    // createApp starts the Vue app, ref makes data reactive
     const { createApp, ref } = Vue
 
     createApp({
         setup() {
+            // ref is used so Vue can track changes and update the page automaticly
             const taskList = ref([
                 'Task 1',
                 'Task 2',
                 'Task 3'
             ])
 
+            // starts as an empty string for the input box.
             const newTask = ref('')
 
             function addTask() {
+                // trim removes extra spaces, so blank tasks dont get added
                 if (newTask.value.trim() !== '') {
                     taskList.value.push(newTask.value)
+
+                    // clears the input after adding the task
                     newTask.value = ''
                 }
             }
 
+            // anything returned here can be used in the html
             return {
                 taskList,
                 newTask,
                 addTask
             }
         }
-    }).mount('#app')
+    }).mount('#app') // mounts the Vue app to the div with id="app"
 </script>
 
 </body>

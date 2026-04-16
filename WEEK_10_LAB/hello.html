@@ -10,13 +10,19 @@
 
 <div id="app">
     <h1>Hello Vue</h1>
+
+    <!-- shows the computed message -->
     <p>{{ messageWithExclamationPoints }}</p>
     
+    <!-- runs this function when clicked -->
     <button v-on:click="addExclamationPoints">Add Exclamation Points</button>
+
+    <!-- resets the message -->
     <button v-on:click="clearExclamationPoints">Clear Exclamation Points</button>
 </div>
 
 <script>
+    // createApp starts vue, ref makes data reactive, computed builds a value from other data
     const { createApp, ref, computed } = Vue
 
     createApp({
@@ -25,8 +31,8 @@
             const numberOfExclamationPoints = ref(1)
 
             function addExclamationPoints() {
+                // only lets the user go up to 10
                 if (numberOfExclamationPoints.value < 10) {
-   
                     numberOfExclamationPoints.value++
                 } else {
                     alert('No more exclamation points!')
@@ -34,18 +40,24 @@
             }
             
             function clearExclamationPoints() {
+                // resets both values.
                 numberOfExclamationPoints.value = 0
                 message.value = "Hi"
             }
 
+            // computed updates automaticly when reactive data changes
             const messageWithExclamationPoints = computed(function() {
                 let computedMessage = message.value
+
+                // adds ! one at a time based on the current number
                 for (let x = 0; x < numberOfExclamationPoints.value; x++) {
                     computedMessage = computedMessage + '!'
                 }
+
                 return computedMessage
             })
 
+            // returned values can be used in the html
             return {
                 message,
                 numberOfExclamationPoints,
@@ -54,7 +66,7 @@
                 clearExclamationPoints
             }
         }
-    }).mount('#app')
+    }).mount('#app') // attaches vue to the div with id app
 </script>
     
 </body>

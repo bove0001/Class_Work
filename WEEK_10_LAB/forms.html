@@ -9,35 +9,43 @@
 </head>
 <body>
 
- <div id="app"><h1>Enter your name:
-        <input v-model="name" type="text">
+ <div id="app">
+    <h1>Enter your name:</h1>
 
-        <p v-if="name">Hello, {{ name }}!</p>
-        <p v-else>Please enter your name.</p>
+    <!-- v-model connects the input to the name variable -->
+    <input v-model="name" type="text">
 
-        <button @click="name = ''">Clear</button>
+    <!-- v-if shows this only when name has a value -->
+    <p v-if="name">Hello, {{ name }}!</p>
 
- </h1>
+    <!-- v-else shows when name is empty  -->
+    <p v-else>Please enter your name.</p>
 
+    <!-- clears the text box when clicked -->
+    <button @click="name = ''">Clear</button>
  </div>
 
  <script>
+    // createApp starts vue, ref makes reactive data
     const { createApp, ref } = Vue
 
     createApp({
         setup() {
- 
+            // starts as an empty string.
             const name = ref('')
 
             function clearName() {
+                // sets name back to blank
                 name.value = ''
             }
 
+            // returned values can be used in the html
             return {
-                name
+                name,
+                clearName
             }
         }
-    }).mount('#app')
+    }).mount('#app') // attaches vue to the div with id app
 </script>
 
 </body>
