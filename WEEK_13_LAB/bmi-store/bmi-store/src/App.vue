@@ -1,18 +1,18 @@
 <script setup>
-import BodyMassIndexForm from './components/BodyMassIndexForm.vue'
+import BodyMassIndexForm from './components/BodyMassIndexForm.vue' // child form component
 
-import { useBmiStore } from './stores/bmiStore.js'
-import { storeToRefs } from 'pinia'
+import { useBmiStore } from './stores/bmiStore.js' // BMI store
+import { storeToRefs } from 'pinia' // make store values reactive
 
-const bmiStore = useBmiStore()
-const { calculatedBmi } = storeToRefs(bmiStore)
+const bmiStore = useBmiStore() // use BMI store
+const { calculatedBmi } = storeToRefs(bmiStore) // BMI result from store
 </script>
 
 <template>
-  <h1>This is App.vue</h1>
+  <h1>BMI Calculator</h1> <!-- page title -->
 
-  <BodyMassIndexForm />
+  <BodyMassIndexForm /> <!-- BMI form -->
 
-  <p v-if="calculatedBmi">Your BMI is: {{ calculatedBmi }}</p>
-  <p v-else>Please enter your weight and height to calculate your BMI.</p>
+  <p v-if="calculatedBmi">Your BMI is: {{ calculatedBmi }}</p> <!-- show BMI -->
+  <p v-else>Please enter valid weight (>30 kg) and height (>100 cm) to calculate your BMI.</p> <!-- fallback message -->
 </template>

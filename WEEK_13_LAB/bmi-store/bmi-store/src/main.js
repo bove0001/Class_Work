@@ -1,11 +1,11 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from 'vue' // create Vue app
+import { createPinia } from 'pinia' // create Pinia store
 
-import './style.css'
-import App from './App.vue'
+import './style.css' // global styles
+import App from './App.vue' // root component
 
-const piniaStore = createPinia()
-const app = createApp(App)
+const piniaStore = createPinia() // Pinia instance
+const app = createApp(App) // Vue app instance
 
-app.use(piniaStore)
-app.mount('#app')
+app.use(piniaStore) // add Pinia to app
+app.mount('#app') // mount app to page

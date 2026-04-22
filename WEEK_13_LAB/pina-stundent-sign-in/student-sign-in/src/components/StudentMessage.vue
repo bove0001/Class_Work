@@ -1,11 +1,9 @@
 <script setup>
+import { useStudentStore } from '../stores/StudentStore.js' // student store
+import { storeToRefs } from 'pinia' // keep store values reactive
 
-import { useStudentStore } from '../stores/StudentStore.js'
-import { storeToRefs } from 'pinia'
-const studentStore = useStudentStore()
-const { mostRecentStudent } = storeToRefs(studentStore)
-
-
+const studentStore = useStudentStore() // use student store
+const { mostRecentStudent } = storeToRefs(studentStore) // recent student ref
 </script>
 
 <template>
@@ -20,10 +18,7 @@ const { mostRecentStudent } = storeToRefs(studentStore)
             </div>
         </div>
     </div>
-
 </template>
 
-
 <style scoped>
-
 </style>

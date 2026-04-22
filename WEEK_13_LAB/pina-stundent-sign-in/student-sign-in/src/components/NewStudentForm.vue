@@ -1,29 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue' // Vue refs
 
-import { useStudentStore } from '../stores/StudentStore.js'
-const studentStore = useStudentStore()
+import { useStudentStore } from '../stores/StudentStore.js' // student store
+const studentStore = useStudentStore() // use student store
 
-
-const newStudentName = ref('');
-const newStarID = ref('');
-const formErrors = ref([]);
+const newStudentName = ref('') // new student name
+const newStarID = ref('') // new Star ID
+const formErrors = ref([]) // form errors
 
 const addStudent = () => {
-        // Clear old errors
-        formErrors.value = []
+        formErrors.value = [] // clear old errors
 
-        // Check name
         if (!newStudentName.value) {
-            formErrors.value.push('Name is required')
+            formErrors.value.push('Name is required') // check name
         }
 
-        // Check Star ID
         if (!newStarID.value) {
-            formErrors.value.push('Star ID is required')
+            formErrors.value.push('Star ID is required') // check Star ID
         }
 
-        // Add student if valid
         if (formErrors.value.length === 0) {
             const student = {
                 name: newStudentName.value,
@@ -31,12 +26,10 @@ const addStudent = () => {
                 present: false
             }
 
-            // TODO: Add student to database
-            studentStore.addNewStudent(student)
+            studentStore.addNewStudent(student) // add student to store
             
-            // Clear inputs
-            newStudentName.value = ''
-            newStarID.value = ''
+            newStudentName.value = '' // clear name
+            newStarID.value = '' // clear Star ID
         }
     }
 
@@ -59,23 +52,18 @@ const addStudent = () => {
 
             <div class="form-group mb-3">
                 <label for="name">Name</label>
-                <!-- Student name input -->
-                <input v-model.trim="newStudentName" id="name" class="form-control">
+                <input v-model.trim="newStudentName" id="name" class="form-control"> <!-- name input -->
             </div>
 
             <div class="form-group mb-3">
                 <label for="starID">Star ID</label>
-                <!-- Star ID input -->
-                <input v-model.trim="newStarID" id="starID" class="form-control">
+                <input v-model.trim="newStarID" id="starID" class="form-control"> <!-- Star ID input -->
             </div>
 
-            <!-- Add button -->
-            <button v-on:click="addStudent" class="btn btn-primary">Add</button>
+            <button v-on:click="addStudent" class="btn btn-primary">Add</button> <!-- add button -->
         </div>
 
 </template>
 
-
 <style scoped>
-
 </style>
