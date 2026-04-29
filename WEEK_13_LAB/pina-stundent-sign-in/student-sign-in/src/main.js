@@ -1,15 +1,14 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from 'vue' // create Vue app
+import { createPinia } from 'pinia' // create Pinia store
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-// import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import 'bootstrap-icons/font/bootstrap-icons.css'
-import './style.css'
+import 'bootstrap/dist/css/bootstrap.min.css' // Bootstrap styles
+
+import 'bootstrap-icons/font/bootstrap-icons.css' // Bootstrap icons
+import './style.css' // import styles
 
 import App from './App.vue'
-// createApp(App).mount('#app')
 
-const app = createApp(App)
-const pinia = createPinia()
-app.use(pinia)
-app.mount('#app')
+const app = createApp(App) // app instance
+const pinia = createPinia() // Pinia instance
+app.use(pinia) // add Pinia to app
+app.mount('#app') // mount app
